@@ -1,0 +1,20 @@
+{
+  "name": "ropes-sim",
+  "build": { "dockerfile": "Dockerfile" },
+  "remoteUser": "dev",
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind",
+  "workspaceFolder": "/workspace",
+  // caches em volumes nomeados: sem isto, todo rebuild rebaixa o mundo inteiro
+  // (~/.m2 tem centenas de MB depois de um `mvn test`)
+  "mounts": [
+    "source=ropes-sim-m2,target=/home/dev/.m2,type=volume",
+    "source=ropes-sim-npm,target=/home/dev/.npm,type=volume"
+  ],
+  // 8080 = Spring Boot, 5173 = Vite
+  "forwardPorts": [8080, 5173],
+  "customizations": {
+    "vscode": {
+      "extensions": ["vscjava.vscode-java-pack"]
+    }
+  }
+}

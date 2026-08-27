@@ -1,0 +1,17 @@
+{
+  // Single source for recommendations. Do not duplicate in .code-workspace: with a
+  // single folder, this file is already read in both ways of opening the project.
+  "recommendations": [
+    // Java: language server, Maven, test runner, debugger
+    "vscjava.vscode-java-pack",
+    // Spring Boot: bean navigation, live reload, application.yml support
+    "vmware.vscode-boot-dev-pack",
+    // fires requests from .http files — practise the API contract by hand
+    "humao.rest-client",
+    // used once the frontend exists (the Vite react-ts template ships eslint)
+    "dbaeumer.vscode-eslint",
+    // required on the host to open this repo inside the devcontainer
+    "ms-vscode-remote.remote-containers"
+  ],
+  "unwantedRecommendations": []
+}
