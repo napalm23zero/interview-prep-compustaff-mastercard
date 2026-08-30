@@ -375,3 +375,10 @@ pontas pra mesma moeda antes de comparar, e aí a ambiguidade desaparece.*
 **"O que faltou?"**
 > "Styling, and I'd say that was deliberate — none of the requirements are about how it looks.
 > And I'd have liked a test around the overlapping-submissions case on the frontend."
+
+---
+
+## 11. A ordem de ataque
+
+Está em [ROADMAP.md](ROADMAP.md): os 45 minutos arquivo por arquivo, o que escrever dentro de
+cada um, os checkpoints de teste e a tabela de corte por horário.

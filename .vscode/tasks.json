@@ -1,0 +1,56 @@
+{
+  "version": "2.0.0",
+  // Uses the global `mvn` from the devcontainer image, not ./mvnw: no wrapper download.
+  "tasks": [
+    {
+      // Kills whatever holds :8080 before starting. Without this, a forgotten
+      // `mvn spring-boot:run` makes the next launch die with "Port 8080 was already in
+      // use" — an error that points at the wrong place. `-sTCP:LISTEN` narrows it to the
+      // process owning the port, and `exit 0` keeps the task from ever blocking what
+      // depends on it.
+      "label": "free :8080",
+      "type": "shell",
+      "command": "lsof -ti tcp:8080 -sTCP:LISTEN | xargs -r kill -9 2>/dev/null; exit 0",
+      "presentation": { "reveal": "silent", "panel": "shared" },
+      "problemMatcher": []
+    },
+    {
+      "label": "backend",
+      "detail": "Spring Boot on :8080",
+      "type": "shell",
+      "command": "mvn spring-boot:run",
+      "options": { "cwd": "${workspaceFolder}/app/backend" },
+      "dependsOn": ["free :8080"],
+      "isBackground": true,
+      "presentation": { "panel": "dedicated", "group": "dev" },
+      "problemMatcher": []
+    },
+    {
+      "label": "frontend",
+      "detail": "Vite on :5173",
+      "type": "shell",
+      "command": "npm run dev",
+      "options": { "cwd": "${workspaceFolder}/app/frontend" },
+      "isBackground": true,
+      "presentation": { "panel": "dedicated", "group": "dev" },
+      "problemMatcher": []
+    },
+    {
+      "label": "dev: all",
+      "detail": "brings both up side by side",
+      "dependsOn": ["backend", "frontend"],
+      "dependsOrder": "parallel",
+      "group": { "kind": "build", "isDefault": true },
+      "problemMatcher": []
+    },
+    {
+      "label": "test",
+      "type": "shell",
+      "command": "mvn -q test",
+      "options": { "cwd": "${workspaceFolder}/app/backend" },
+      "group": { "kind": "test", "isDefault": true },
+      "presentation": { "panel": "dedicated", "clear": true },
+      "problemMatcher": []
+    }
+  ]
+}

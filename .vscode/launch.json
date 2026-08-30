@@ -1,0 +1,35 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "backend",
+      "request": "launch",
+      "mainClass": "dev.hustletech.interview.compustaff.CompustaffApplication",
+      "projectName": "compustaff",
+      "console": "internalConsole",
+      "preLaunchTask": "free :8080",
+      // DEBUG=release leaks out of the VS Code Server process into everything it spawns.
+      // Spring binds that env var to the `debug` property, which prints the whole
+      // CONDITIONS EVALUATION REPORT on startup. Overridden here.
+      "env": { "DEBUG": "false" }
+    },
+    {
+      // Debugs the Vite process, not the React code: the browser runs on the host, outside
+      // the container. Component breakpoints go in the host browser's DevTools.
+      "type": "node-terminal",
+      "name": "frontend",
+      "request": "launch",
+      "command": "npm run dev",
+      "cwd": "${workspaceFolder}/app/frontend"
+    }
+  ],
+  "compounds": [
+    {
+      // One F5 for the whole stack.
+      "name": "full stack: backend + frontend",
+      "configurations": ["backend", "frontend"],
+      "stopAll": true
+    }
+  ]
+}
