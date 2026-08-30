@@ -17,10 +17,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidation(MethodArgumentNotValidException exception) {
         List<ErrorResponse.FieldError> fieldErrors = exception.getBindingResult().getFieldErrors().stream()
-                .map(error -> ErrorResponse.FieldError.builder()
-                        .field(error.getField())
-                        .message(error.getDefaultMessage())
-                        .build())
+                .map(error -> new ErrorResponse.FieldError(error.getField(), error.getDefaultMessage()))
                 .toList();
 
         return build(HttpStatus.BAD_REQUEST, ErrorCode.VALIDATION_ERROR, "Request validation failed", fieldErrors);
@@ -46,13 +43,12 @@ public class GlobalExceptionHandler {
     private ResponseEntity<ErrorResponse> build(HttpStatus status, ErrorCode code, String message,
             List<ErrorResponse.FieldError> fieldErrors) {
 
-        ErrorResponse body = ErrorResponse.builder()
-                .timestamp(Instant.now().truncatedTo(ChronoUnit.SECONDS))
-                .status(status.value())
-                .code(code)
-                .message(message)
-                .fieldErrors(fieldErrors)
-                .build();
+        ErrorResponse body = new ErrorResponse(
+                Instant.now().truncatedTo(ChronoUnit.SECONDS),
+                status.value(),
+                code,
+                message,
+                fieldErrors);
 
         return ResponseEntity.status(status).body(body);
     }

@@ -5,28 +5,19 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-import lombok.Builder;
-import lombok.Getter;
-
-/** Single error envelope for every failure the API can return. */
-@Builder
-@Getter
+/**
+ * Single error envelope for every failure the API can return. fieldErrors is populated only
+ * for VALIDATION_ERROR and left out of the JSON entirely otherwise.
+ */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ErrorResponse {
+public record ErrorResponse(
+        Instant timestamp,
+        int status,
+        ErrorCode code,
+        String message,
+        List<FieldError> fieldErrors) {
 
-    private Instant timestamp;
-    private int status;
-    private ErrorCode code;
-    private String message;
-
-    /** Present only for VALIDATION_ERROR. */
-    private List<FieldError> fieldErrors;
-
-    @Builder
-    @Getter
-    public static class FieldError {
-        private String field;
-        private String message;
+    public record FieldError(String field, String message) {
     }
 
 }

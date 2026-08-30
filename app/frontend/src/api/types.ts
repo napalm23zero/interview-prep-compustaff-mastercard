@@ -1,5 +1,7 @@
-export type Decision = "APPROVED" | "REJECTED";
-export type Reasons =
+/** The wire contract. Monetary values are strings, never numbers: a JSON number is an
+ *  IEEE-754 double and would lose precision on parse. */
+
+export type RejectionReason =
   | "ACCOUNT_INACTIVE"
   | "KYC_NOT_VERIFIED"
   | "CURRENCY_MISMATCH"
@@ -8,40 +10,34 @@ export type Reasons =
   | "INSUFFICIENT_FUNDS"
   | "DAILY_LIMIT_EXCEEDED";
 
-// request
 export interface EligibilityRequest {
-  accountId: number;
+  accountId: string;
   amount: string;
   currency: string;
 }
 
-// response
 export interface EligibilityResponse {
-  accountId: number;
   eligible: boolean;
-  decision: Decision;
-  reasons: Reasons[];
+  reasons: RejectionReason[];
   amount: string;
   availableBalance: string;
-  evaluatedAt: string;
 }
 
-export type CodeState =
+export type ErrorCode =
   | "VALIDATION_ERROR"
   | "MALFORMED_REQUEST"
   | "ACCOUNT_NOT_FOUND"
   | "INTERNAL_ERROR";
 
 export interface FieldError {
-    field: string;
-    message: string;
+  field: string;
+  message: string;
 }
 
-//error
+/** Every error the API returns uses this single envelope. */
 export interface ErrorResponse {
-  timestamp: string;
-  status: number;
-  code: CodecState;
-  nessage: string;
-  fieldErrors: FieldError[];
+  code: ErrorCode;
+  message: string;
+  /** Present only for VALIDATION_ERROR. */
+  fieldErrors?: FieldError[];
 }
